@@ -1,61 +1,77 @@
 <?php
-include "../process/myConnection.php";
+header("Content-Type: application/json");
+include '../backend/myConnection.php'; // Ensure database connection is included
 
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $postData = file_get_contents("php://input");
+// Get raw JSON input
+$jsonInput = file_get_contents("php://input");
+$data = json_decode($jsonInput, true);
 
-    $requestData = json_decode($postData, true);
+// Debugging: Log raw JSON and parsed array
+file_put_contents('debug.log', "RAW JSON:\n$jsonInput\n\nPARSED DATA:\n" . print_r($data, true), FILE_APPEND);
 
-    $studentID = $requestData['studentID'];
-    $studentName = $requestData['studentName'];
-    $books = $requestData['books'];
+// Validate input
+if (!isset($data['idNumber']) || !isset($data['itemCart']) || !is_array($data['itemCart'])) {
+    echo json_encode(["success" => false, "error" => "Missing required data."]);
+    exit();
+}
 
-    $success = insertBorrowedBooks($studentID, $studentName, $books);
+$idNumber = $data['idNumber'];
+$itemCart = $data['itemCart']; // Array of item IDs
 
-    if ($success) {
-        $bookIDs = array_column($books, 'id');
-        updateBookStatus($bookIDs);
+// Find the userID from the users table based on idNumber
+$queryUser = "SELECT userID FROM users WHERE idNumber = ?";
+$stmtUser = $con->prepare($queryUser);
+$stmtUser->bind_param("s", $idNumber);
+$stmtUser->execute();
+$resultUser = $stmtUser->get_result();
+
+if ($resultUser->num_rows == 0) {
+    echo json_encode(["success" => false, "error" => "User not found."]);
+    exit();
+}
+
+$userRow = $resultUser->fetch_assoc();
+$userID = $userRow['userID'];
+$stmtUser->close();
+
+// Insert borrow requests into BORROWED_ITEMS and update itemStatus
+$insertSuccess = true;
+foreach ($itemCart as $itemID) {
+    // Insert into borrowed_items table
+    $query = "INSERT INTO BORROWED_ITEMS (userID, itemID, borrowDate) VALUES (?, ?, NOW())";
+    $stmt = $con->prepare($query);
+
+    if ($stmt) {
+        $stmt->bind_param("ii", $userID, $itemID);
+        if (!$stmt->execute()) {
+            $insertSuccess = false;
+        }
+        $stmt->close();
+    } else {
+        $insertSuccess = false;
     }
 
-    // Prepare response data
-    $response = [
-        'success' => $success
-    ];
+    // Update itemStatus to "Borrowed"
+    $updateQuery = "UPDATE items SET itemStatus = 'Borrowed' WHERE itemID = ?";
+    $stmtUpdate = $con->prepare($updateQuery);
 
-    header('Content-Type: application/json');
-    echo json_encode($response);
+    if ($stmtUpdate) {
+        $stmtUpdate->bind_param("i", $itemID);
+        if (!$stmtUpdate->execute()) {
+            $insertSuccess = false;
+        }
+        $stmtUpdate->close();
+    } else {
+        $insertSuccess = false;
+    }
+}
+
+// Check if insertion and update were successful
+if ($insertSuccess) {
+    echo json_encode(["success" => true, "message" => "Borrow request saved and items marked as borrowed.", "idNumber" => $idNumber, "items" => $itemCart]);
 } else {
-    http_response_code(405); // Method Not Allowed
-    echo json_encode(['error' => 'Method Not Allowed']);
+    echo json_encode(["success" => false, "error" => "Failed to save borrow request or update item status."]);
 }
 
-// Function to insert borrowed books into the database
-function insertBorrowedBooks($studentID, $studentName, $books)
-{
-    global $con;
-    foreach ($books as $book) {
-        $title = $book['title'];
-        $author = $book['author'];
-        $isbn = $book['isbn'];
-        $sql = "INSERT INTO borrowed_books (student_id, student_name, book_title, book_author, book_isbn) VALUES ('$studentID', '$studentName', '$title', '$author', '$isbn')";
-        if ($con->query($sql) !== true) {
-            return false; 
-        }
-    }
-    return true;
-}
-
-// Function to update book status to 'Borrowed' after borrowing
-function updateBookStatus($bookIDs)
-{
-    global $con;
-    foreach ($bookIDs as $bookID) {
-        $sql = "UPDATE books_table SET bookStatus = 'Borrowed' WHERE bookID = $bookID";
-        if ($con->query($sql) !== true) {
-            return false; 
-        }
-    }
-    return true;
-}
-
+$con->close();
 ?>

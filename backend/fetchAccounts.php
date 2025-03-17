@@ -1,5 +1,5 @@
 <?php
-include '../process/myConnection.php';
+include '../backend/myConnection.php';
 
 $sql = "SELECT * FROM users";
 $result = mysqli_query($con, $sql);

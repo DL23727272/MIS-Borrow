@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home</title>
+    <title>Cart</title>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
@@ -64,8 +64,8 @@
     </style>
 </head>
 <body>
-     <!--Navbar-->
-     <header class="header">
+    <!--Navbar-->
+    <header class="header">
       <div class="container">
        <div
         class="d-flex flex-column align-items-center justify-content-center text-center"
@@ -120,7 +120,7 @@
           <div class="collapse navbar-collapse container-fluid" id="navbarSupportedContent" style="width: 30vw">
             <ul class="navbar-nav mb-2 mb-lg-0">
               <li class="nav-item">
-                <a class="nav-link fw-bold" aria-current="page" href="#">
+                <a class="nav-link fw-bold" aria-current="page" href="home.php">
                   Home
                 </a>
               </li>
@@ -139,9 +139,9 @@
       
         </div>
       </nav>
-      <!--End ti Navbar -->
+    <!--End ti Navbar -->
 
-    
+
 
       <!-- MODAL -->
 
@@ -152,129 +152,62 @@
       <!--Hero-->
      <section class="container-sm">
         <div class="d-flex flex-column align-items-center text-center">
+          <img
+            src="./img/lms.jpg"
+            style="width: 200px; height: 200px"
+            alt=""
+            class="mt-5 mb-3 img-fluid"
+            srcset=""
+          />
           <p class="w-75 lead text-secondary fst-italic" id="studentID">
-          
+            
           </p>
-          <!-- <a class="nav-link" data-bs-toggle="modal" data-bs-target="#addProduct"> 
-          <button class="btn btn-outline-success" >Add Product</button>
-          </a> -->
+         
         </div>
       </section>
       <!-- End Hero-->
   
       <hr class="container-sm Sborder border-success mt-5 border-2 opacity-50" />
   
-      <section class="mt-5">
-        <div class="container-sm">
-          <div class="row justify-content-center">
-            <div class="col-12 text-center">
-              <h1 class="fw-bold">MIS Equipments</h1>
-            </div>
+      <!--Cart-->
+    <section class="container-sm mt-5">
+        <h5  id="customerID"></h5>
+        <h2>Your Cart: <b id="totalItems"></b> items</h2>
+        <span id="cartStatus" class="lead badge text-bg-danger">
+          Please select a book</span
+        >
+  
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Book Title</th>
+              <th>Book Author</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="cartTableBody"></tbody>
+        </table>
+        <div class="row">
+          <div class="col-md-6 px-4">
+             
           </div>
-          <div class=" w-100" id="bookContent">
-            
+          <div class="col-md-6 text-end">
+              <button class="btn btn-outline-dark" id="borrowButton">Borrow item</button>
           </div>
-        </div>
+        
+      </div>
       </section>
+      <!---end Cart-->
     
       <!---Footer-->
       <?php include 'footer.php'?>
      <!---End Footer-->
 
  
-    <script type="text/javascript">
-        alertify.set('notifier', 'position', 'top-right');
-    
-        $(document).ready(function () {
-              $('#modalContainer').load('modal.html');
-          });
-          document.addEventListener("DOMContentLoaded", function () {
-          document.querySelectorAll(".ispsc-logo").forEach(function (element) {
-              element.innerHTML = element.textContent
-                .split(" ")
-                .map(word => `<span>${word.charAt(0)}</span>${word.slice(1)}`)
-                .join(" ");
-            });
-        });
-    
-        document.addEventListener("DOMContentLoaded", function () {
-            var userID = sessionStorage.getItem('userID');
-            var studentName = sessionStorage.getItem('studentName');
-            var cartItem = JSON.parse(localStorage.getItem("itemCart")) || [];
-            // Check if customerID is present
-            if (userID) {
-                document.getElementById('studentID').innerText = 'Name: ' + studentName;
-                console.log('Customer ID ' + userID)
-                console.log('Customer Name ' + studentName);
-                console.log(cartItem)
-    
-            } else {
-                console.log('Customer ID not found in sessionStorage');
-            }
-    
-            // Update cart count in navbar
-            displayCartCount();
-        });
-    
-    
-        function loadBooks() {
-            $.ajax({
-                url: 'backend/fetchBooks.php',
-                success: function (data) {
-                    if (data.trim() === '') {
-                        $('#bookContent').append('<div><p>NO PRODUCTS AVAILABLE</p></div>');
-                    } else {
-                        $('#bookContent').append(data);
-                    }
-                },
-                error: function () {
-                    $('#bookContent').append('<div><p>Error loading products. Please try again later.</p></div>');
-                }
-            });
-        }
-    
-        loadBooks();
-    
-        $(document).ready(function () {
-            // Function to update cart count in the navbar
-            function displayCartCount() {
-                var itemCart = JSON.parse(localStorage.getItem("itemCart")) || [];
-                var cartCount = itemCart.length;
-                $('#cartCount').text(cartCount);
-                localStorage.setItem("cartCount", cartCount);
-            }
+     <script src="script/cart.js"></script>
+     <script type="text/javascript">
+      alertify.set('notifier', 'position', 'top-right');
 
-            // Call displayCartCount on page load to update the cart count display
-            displayCartCount();
-
-            // Event listener for adding items to the cart
-            $(document).on('click', '.borrow-item', function () {
-                var itemId = $(this).data('item-id');
-                var itemName = $(this).data('item-name');
-
-                var cartItem = {
-                    id: itemId,
-                    name: itemName
-                };
-
-                var itemCart = JSON.parse(localStorage.getItem("itemCart")) || [];
-                itemCart.push(cartItem);
-                localStorage.setItem("itemCart", JSON.stringify(itemCart));
-
-                // Update cart count display
-                displayCartCount();
-
-                // Show success message
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Item added successfully!',
-                    showConfirmButton: false,
-                    timer: 2000
-                });
-            });
-        });
-        
     </script>
-    
 </body>
 </html>

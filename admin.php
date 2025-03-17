@@ -23,23 +23,14 @@
     <script src="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="icon" type="image/x-icon" href="img/logo.ico">
+    <link href="styles.css" rel="stylesheet" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
 
     <style>
-          .navbar {
-            background-color: #008000; 
-            transition: background-color 0.3s ease; 
-          }
-         
-          .nav-link {
-            color: white;
-            font-weight: 500;
-            transition: color 0.3s ease 
-          }
-          .nav-link.scrolled:hover {
-            color: #006341; 
-            font-weight: 500;
-          }
-         
+        
           .login__bg{
             position: absolute;
             width: 100%;
@@ -59,49 +50,42 @@
     </style>
 </head>
 <body>
-     <!--Navbar-->
-     <nav class="navbar navbar-expand-lg shadow-lg sticky-top" id="navbar">
-        <div class="container-sm d-flex justify-content-between" style="width: 100%">
-  
-          <div class="d-flex justify-content-between align-items-center" style="width: 100vw">
-            <div class="d-flex align-items-center">
-                <!-- Logo and text -->
-                <div>
-                    <img src="img/logo.png" alt="" style="width: 60px;" />
-                </div>
-                <div class="ms-2">
-                    <h3 class="fw-bold m-0">Library Users Registration</h3>
-                </div>
-            </div>
-            <div>
-              <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent">
-                <i class="fa-solid fa-bars" id="mugIcon"></i>
-              </button>
-            </div>
+      <!--Navbar-->
+      <header class="header">
+      <div class="container">
+       <div
+        class="d-flex flex-column align-items-center justify-content-center text-center"
+        >
+          <div>
+            <img
+              src="img/ispsc.png"
+              alt="ISPSC Logo"
+              width="100"
+              height="100"
+              class="me-3"
+            />
+            <img
+              class="bagong-pilipinas"
+              src="img/bagong-pilipinas.png"
+              alt="ISPSC Logo"
+              width="120"
+              height="120"
+              class="me-3"
+            />
           </div>
-          <div class="collapse navbar-collapse container-fluid" id="navbarSupportedContent" style="width: 30vw">
-            <ul class="navbar-nav mb-2 mb-lg-0">
-              <li class="nav-item">
-                <a class="nav-link " aria-current="page" href="#">
-                  Home
-                </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link " href="account.html">
-                 Users
-                </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link " href="index.html">
-                  <i class="fa-solid fa-power-off"></i>
-                </a>
-              </li>
-            </ul>
+          <div>
+            <h1 class="ispsc-logo mb-0">REPUBLIC OF THE PHILIPPINES</h1>
+            <hr class="my-2 border-white" />
+            <h1 class="ispsc-logo mb-0">
+              ILOCOS SUR POLYTECHNIC STATE COLLEGE
+            </h1>
+            <h2 class="ispsc-logo mb-0">ILOCOS SUR, PHILIPPINES</h2>
           </div>
-      
         </div>
-      </nav>
+      </div>
+    </header>
       <!--End ti Navbar -->
+
 
       <!-- MODAL -->
 
@@ -139,8 +123,8 @@
           <div class="row justify-content-center">
             <div class="col-12 text-center">
                 <div class="mt-5">
-                    <a class="nav-link" data-bs-toggle="modal" data-bs-target="#addBookModal"> 
-                        <button class="btn btn-outline-success" >Add Book</button>
+                    <a class="nav-link" data-bs-toggle="modal" data-bs-target="#addItemModal"> 
+                        <button class="btn btn-outline-success" >Add Item</button>
                     </a>
                  </div>
               <h1 class="fw-bold">Library Books</h1>
@@ -154,26 +138,7 @@
       
     
       <!---Footer-->
-      <footer class="mt-5 text-white p-3" style="background-color: #008000;">
-        <div class="container-sm d-flex justify-content-between align-items-center">
-          <div class="">
-            <h4>ISPSC Library Management System</h4>
-            <h5>CCSIT 210</h5>
-            <ul>
-              <li>Dran Leynard Gamoso</li>
-              <li>Dran Leynard Gamoso</li>
-            </ul>
-          </div>
-          <div class="">
-            <div>
-              <img src="./img/logo.png" style=" width: 50px; height: 50px;" alt="">
-            </div>
-            <div>
-              <p class="fst-bold">&copy DL Visuals</p>
-            </div>
-          </div>
-        </div>
-      </footer>
+      <?php include 'footer.php'?>
      <!---End Footer-->
 
  
@@ -182,6 +147,14 @@
   
       $(document).ready(function () {
           $('#modalContainer').load('modal.html');
+      });
+      document.addEventListener("DOMContentLoaded", function () {
+        document.querySelectorAll(".ispsc-logo").forEach(function (element) {
+            element.innerHTML = element.textContent
+              .split(" ")
+              .map(word => `<span>${word.charAt(0)}</span>${word.slice(1)}`)
+              .join(" ");
+          });
       });
   
       document.addEventListener("DOMContentLoaded", function () {
@@ -200,65 +173,65 @@
           displayCartCount();
       });
   
-      // ADD BOOK
-      $(document).on('click', '#addBookButton', function () {
-          console.log("Submit button clicked");
-  
-          var formData = new FormData();
-          formData.append('bookTitle', $('#bookTitle').val());
-          formData.append('bookAuthor', $('#bookAuthor').val());
-          formData.append('bookISBN', $('#bookISBN').val());
-          formData.append('bookStatus', $('#bookStatus').val());
-          formData.append('image', $('#productImageName')[0].files[0]);
-  
-          console.log("Form data:", formData);
-  
-          $.ajax({
-              type: 'POST',
-              url: 'process/addBook.php',
-              data: formData,
-              contentType: false,
-              processData: false,
-              beforeSend: function () {
-                  $('#addBookButton').prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i> Submitting...');
-              },
-              success: function (response) {
-                  console.log("AJAX request successful");
-                  console.log("Response:", response);
-  
-                  if (response.trim() === 'Book inserted successfully') {
-                      Swal.fire({
-                          icon: 'success',
-                          title: 'Book added successfully',
-                          showConfirmButton: false,
-                          timer: 2000
-                      });
-                      $('#addBookModal').modal('hide');
-                      setTimeout(function () {
-                          location.reload();
-                      }, 3000);
-                  } else {
-                      Swal.fire({
-                          icon: 'error',
-                          title: 'Failed to add book',
-                          showConfirmButton: false,
-                          timer: 2000
-                      });
-                  }
-              },
-              error: function (xhr, status, error) {
-                  console.error("AJAX request error:", xhr.responseText);
-                  alertify.error('Error: ' + xhr.responseText);
-                  $('#addBookButton').prop('disabled', false).html('Submit');
-              }
-          });
-      });
-      // END ADD BOOK
+     // ADD ITEM
+    $(document).on('click', '#addItemButton', function () {
+        console.log("Submit button clicked");
+
+        var formData = new FormData();
+        formData.append('itemName', $('#itemName').val());
+        formData.append('itemDescription', $('#itemDescription').val());
+        formData.append('itemStatus', $('#itemStatus').val());
+        formData.append('image', $('#itemImage')[0].files[0]);
+
+        console.log("Form data:", formData);
+
+        $.ajax({
+            type: 'POST',
+            url: 'backend/addItems.php',
+            data: formData,
+            contentType: false,
+            processData: false,
+            beforeSend: function () {
+                $('#addItemButton').prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i> Submitting...');
+            },
+            success: function (response) {
+                console.log("AJAX request successful");
+                console.log("Response:", response);
+
+                if (response.trim() === 'Item inserted successfully') {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Item added successfully',
+                        showConfirmButton: false,
+                        timer: 2000
+                    });
+                    $('#addItemModal').modal('hide');
+                    setTimeout(function () {
+                        location.reload();
+                    }, 3000);
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Failed to add item',
+                        showConfirmButton: false,
+                        timer: 2000
+                    });
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error("AJAX request error:", xhr.responseText);
+                alertify.error('Error: ' + xhr.responseText);
+                $('#addItemButton').prop('disabled', false).html('Submit');
+            }
+        });
+    });
+    // END ADD ITEM
+
   
       // LOAD BOOKS
       function loadBooks() {
           $.ajax({
-              url: 'process/adminFetchBooks.php',
+              url: 'backend/adminFetchBooks.php',
               success: function (data) {
                   if (data.trim() === '') {
                       $('#bookContent').append('<div><p>NO PRODUCTS AVAILABLE</p></div>');
@@ -301,7 +274,7 @@
   
               $.ajax({
                   type: 'POST',
-                  url: 'process/updateBook.php',
+                  url: 'backend/updateBook.php',
                   data: formData,
                   success: function (response) {
                       console.log(response);
@@ -329,7 +302,7 @@
   
           $.ajax({
               type: 'POST',
-              url: 'process/deleteBook.php',
+              url: 'backend/deleteBook.php',
               data: { bookID: bookID },
               success: function (response) {
                   if (response.success) {

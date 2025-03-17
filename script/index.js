@@ -31,8 +31,8 @@ function Login() {
                     sessionStorage.setItem('studentName', username);
 
                     setTimeout(function() {
-                        if (response.type === 'user') {
-                            window.location.href = 'admin.html'; 
+                        if (response.type === 'admin') {
+                            window.location.href = 'admin.php'; 
                         } else {
                             window.location.href = 'home.php'; 
                         }

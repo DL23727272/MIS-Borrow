@@ -183,7 +183,7 @@
 
              function fetchUsers() {
                  $.ajax({
-                     url: 'process/fetchAccounts.php',
+                     url: 'backend/fetchAccounts.php',
                      method: 'GET',
                      success: function(data) {
                          $('#userContent').html(data);
@@ -201,7 +201,7 @@
                 var userID = form.find('input[name="editUserID"]').val();
 
                 $.ajax({
-                    url: 'process/updateUser.php',
+                    url: 'backend/updateUser.php',
                     method: 'POST',
                     data: form.serialize(),
                     success: function(response) {
@@ -235,7 +235,7 @@
                 }).then((result) => {
                     if (result.isConfirmed) {
                         $.ajax({
-                            url: 'process/deleteUser.php',
+                            url: 'backend/deleteUser.php',
                             method: 'POST',
                             data: { userID: userID },
                             success: function(response) {
@@ -303,7 +303,7 @@
                 // Make AJAX request
                 $.ajax({
                     type: "POST",
-                    url: "process/signupProcess.php",
+                    url: "backend/signupProcess.php",
                     data: {
                         studentSignUpidNumber: studentSignUpidNumber,
                         studentSignUpName: studentSignUpName,
