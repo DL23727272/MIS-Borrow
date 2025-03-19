@@ -174,14 +174,14 @@
         <h5  id="customerID"></h5>
         <h2>Your Cart: <b id="totalItems"></b> items</h2>
         <span id="cartStatus" class="lead badge text-bg-danger">
-          Please select a book</span
+          Please select an item</span
         >
   
         <table class="table">
           <thead>
             <tr>
-              <th>Book Title</th>
-              <th>Book Author</th>
+              <!-- <th>Book Title</th> -->
+              <th>Item Name</th>
               <th>Action</th>
             </tr>
           </thead>

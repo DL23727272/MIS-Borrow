@@ -1,13 +1,12 @@
 <?php
 header("Content-Type: application/json");
-include '../backend/myConnection.php'; // Ensure database connection is included
+include '../backend/myConnection.php';
 
-// Get raw JSON input
 $jsonInput = file_get_contents("php://input");
 $data = json_decode($jsonInput, true);
 
-// Debugging: Log raw JSON and parsed array
-file_put_contents('debug.log', "RAW JSON:\n$jsonInput\n\nPARSED DATA:\n" . print_r($data, true), FILE_APPEND);
+error_log("RAW JSON: $jsonInput");
+error_log("PARSED DATA: " . print_r($data, true));
 
 // Validate input
 if (!isset($data['idNumber']) || !isset($data['itemCart']) || !is_array($data['itemCart'])) {
@@ -16,11 +15,18 @@ if (!isset($data['idNumber']) || !isset($data['itemCart']) || !is_array($data['i
 }
 
 $idNumber = $data['idNumber'];
-$itemCart = $data['itemCart']; // Array of item IDs
+$itemCart = $data['itemCart'];
 
-// Find the userID from the users table based on idNumber
+// Find userID based on idNumber
 $queryUser = "SELECT userID FROM users WHERE idNumber = ?";
 $stmtUser = $con->prepare($queryUser);
+
+if (!$stmtUser) {
+    error_log("Error preparing queryUser: " . $con->error);
+    echo json_encode(["success" => false, "error" => "Database error."]);
+    exit();
+}
+
 $stmtUser->bind_param("s", $idNumber);
 $stmtUser->execute();
 $resultUser = $stmtUser->get_result();
@@ -34,24 +40,27 @@ $userRow = $resultUser->fetch_assoc();
 $userID = $userRow['userID'];
 $stmtUser->close();
 
-// Insert borrow requests into BORROWED_ITEMS and update itemStatus
+// Process borrowing and update item status
 $insertSuccess = true;
+
 foreach ($itemCart as $itemID) {
     // Insert into borrowed_items table
-    $query = "INSERT INTO BORROWED_ITEMS (userID, itemID, borrowDate) VALUES (?, ?, NOW())";
+    $query = "INSERT INTO borrowed_items (userID, itemID, borrowDate) VALUES (?, ?, NOW())";
     $stmt = $con->prepare($query);
 
     if ($stmt) {
         $stmt->bind_param("ii", $userID, $itemID);
         if (!$stmt->execute()) {
             $insertSuccess = false;
+            error_log("Insert Error for Item $itemID: " . $stmt->error);
         }
         $stmt->close();
     } else {
         $insertSuccess = false;
+        error_log("Error preparing INSERT query: " . $con->error);
     }
 
-    // Update itemStatus to "Borrowed"
+    // Update itemStatus
     $updateQuery = "UPDATE items SET itemStatus = 'Borrowed' WHERE itemID = ?";
     $stmtUpdate = $con->prepare($updateQuery);
 
@@ -59,16 +68,17 @@ foreach ($itemCart as $itemID) {
         $stmtUpdate->bind_param("i", $itemID);
         if (!$stmtUpdate->execute()) {
             $insertSuccess = false;
+            error_log("Update Error for Item $itemID: " . $stmtUpdate->error);
         }
         $stmtUpdate->close();
     } else {
         $insertSuccess = false;
+        error_log("Error preparing UPDATE query: " . $con->error);
     }
 }
 
-// Check if insertion and update were successful
 if ($insertSuccess) {
-    echo json_encode(["success" => true, "message" => "Borrow request saved and items marked as borrowed.", "idNumber" => $idNumber, "items" => $itemCart]);
+    echo json_encode(["success" => true, "message" => "Borrow request saved and items marked as borrowed."]);
 } else {
     echo json_encode(["success" => false, "error" => "Failed to save borrow request or update item status."]);
 }

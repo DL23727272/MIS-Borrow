@@ -135,3 +135,44 @@ Array
         )
 
 )
+RAW JSON:
+{"idNumber":"A21-00002","itemCart":[2]}
+
+PARSED DATA:
+Array
+(
+    [idNumber] => A21-00002
+    [itemCart] => Array
+        (
+            [0] => 2
+        )
+
+)
+RAW JSON:
+{"idNumber":"A21-00002","itemCart":[4]}
+
+PARSED DATA:
+Array
+(
+    [idNumber] => A21-00002
+    [itemCart] => Array
+        (
+            [0] => 4
+        )
+
+)
+RAW JSON:
+{"idNumber":"A21-00002","itemCart":[11,4,2]}
+
+PARSED DATA:
+Array
+(
+    [idNumber] => A21-00002
+    [itemCart] => Array
+        (
+            [0] => 11
+            [1] => 4
+            [2] => 2
+        )
+
+)

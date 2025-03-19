@@ -26,35 +26,6 @@ $(document).ready(function () {
         }
     }
 
-    // Function to send borrow request
-    function sendBorrowRequest(userID, itemCart) {
-        if (!Array.isArray(itemCart)) {
-            console.error("❌ itemCart is not an array!", itemCart);
-            return;
-        }
-
-        var requestData = {
-            idNumber: userID,
-            itemCart: itemCart.map(item => item.id) // Extract only IDs
-        };
-
-        console.log("🚀 Sending Data to PHP:", requestData);
-
-        $.ajax({
-            type: 'POST',
-            url: 'backend/borrowProcess.php',
-            data: JSON.stringify(requestData),
-            contentType: 'application/json',
-            success: function (response) {
-                console.log('✅ Borrow request successful:', response);
-                clearCart();
-            },
-            error: function (xhr, status, error) {
-                console.error('❌ Error sending borrow request:', error);
-            }
-        });
-    }
-
     // Function to clear the cart after borrowing
     function clearCart() {
         localStorage.removeItem('itemCart');
@@ -76,7 +47,7 @@ $(document).ready(function () {
         cartItems.forEach((item, index) => {
             tableContent += `
                 <tr>
-                    <td>${item.id || item.itemId}</td>
+                    
                     <td>${item.name || "Unknown"}</td>
                     <td><button class='btn btn-outline-danger cancel-btn' data-index="${index}">Cancel</button></td>
                 </tr>
@@ -120,7 +91,7 @@ $(document).ready(function () {
         cancelItem(index);
     });
 
-    // Borrow button click event
+   // Borrow button click event
     $('#borrowButton').click(function () {
         var studentInfo = getStudentInfo();
         var studentID = studentInfo.userID;
@@ -138,6 +109,56 @@ $(document).ready(function () {
 
         sendBorrowRequest(studentID, books);
     });
+
+    function sendBorrowRequest(userID, itemCart) {
+        if (!Array.isArray(itemCart)) {
+            console.error("❌ itemCart is not an array!", itemCart);
+            return;
+        }
+    
+        var requestData = {
+            idNumber: userID,
+            itemCart: itemCart.map(item => item.id) // Convert item objects to IDs
+        };
+    
+        console.log("🚀 Sending Data to PHP:", requestData);
+    
+        $.ajax({
+            type: 'POST',
+            url: 'backend/borrowProcess.php',
+            data: JSON.stringify(requestData),
+            contentType: 'application/json',
+            dataType: 'json', // Ensure the response is treated as JSON
+            success: function (response) {
+                console.log("✅ Response Received:", response);
+    
+                if (response.success) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Borrow Successful!',
+                        text: response.message,
+                    }).then(() => {
+                        clearCart(); // Clear the cart on success
+                        location.reload();
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: response.error || 'Something went wrong!',
+                    });
+                }
+            },
+            error: function (xhr) {
+                console.error("❌ AJAX Error:", xhr.responseText);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'An error occurred while processing the request.',
+                });
+            }
+        });
+    }
 
     // Initial cart display
     displayCartItems();
