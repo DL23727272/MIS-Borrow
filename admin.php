@@ -94,7 +94,7 @@
       <!-- END MODAL -->
 
       <!--Hero-->
-     <section class="container-sm">
+     <!-- <section class="container-sm">
         <div class="d-flex flex-column align-items-center text-center">
           <img
             src="./img/lms.jpg"
@@ -113,7 +113,7 @@
           </p>
          
         </div>
-      </section>
+      </section> -->
       <!-- End Hero-->
   
       <hr class="container-sm Sborder border-success mt-5 border-2 opacity-50" />

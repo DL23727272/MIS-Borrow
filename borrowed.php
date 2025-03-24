@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cart</title>
+    <title>Borrowed</title>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
@@ -107,7 +107,7 @@
               <!-- <div>
                   <img src="img/logo.png" alt="" style="width: 60px;" />
               </div> -->
-              <div class="ms-2">
+              <div class="ms-1">
                   <h3 class="fw-bold m-0 text-white">MIS Office Equipment Logs</h3>
               </div>
             </div>
@@ -174,47 +174,37 @@
   
       <hr class="container-sm Sborder border-success mt-5 border-2 opacity-50" />
   
-      <!--Cart-->
-    <section class="container-sm mt-5">
-        <h5  id="customerID"></h5>
-        <h2>Your Cart: <b id="totalItems"></b> items</h2>
-        <span id="cartStatus" class="lead badge text-bg-danger">
-          Please select an item</span
-        >
-  
-        <table class="table">
-          <thead>
-            <tr>
-              <!-- <th>Book Title</th> -->
-              <th>Item Name</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody id="cartTableBody"></tbody>
-        </table>
-        <div class="row">
-          <div class="col-md-6 px-4">
-             
-          </div>
-          <div class="col-md-6 text-end">
-              <button class="btn btn-outline-dark" id="borrowButton">Borrow item</button>
-          </div>
-        
-      </div>
-      </section>
-      <!---end Cart-->
+      <!--Borrowed Items-->
+        <section class="container-sm mt-5">
+            <h2>Borrowed Items</h2>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Item Name</th>
+                        <th>Borrow Date</th>
+                        <th>Returned Date</th>
+                        <th>Return</th>
+                    </tr>
+                </thead>
+                <tbody id="borrowedTableBody">
 
+                    <!-- Borrowed items will be displayed here -->
+
+                </tbody>
+            </table>
+        </section>
+
+      <!---end Cart-->
       <hr class="container-sm Sborder border-success mt-5 border-2 opacity-50" />
-      
       <!---Footer-->
       <?php include 'footer.php'?>
      <!---End Footer-->
 
  
+     <script src="script/borrowed.js"></script>
      <script src="script/cart.js"></script>
      <script type="text/javascript">
       alertify.set('notifier', 'position', 'top-right');
-      
 
     </script>
 </body>

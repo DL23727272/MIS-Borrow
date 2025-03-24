@@ -1,18 +1,26 @@
- document.addEventListener("DOMContentLoaded", function () {
-          var studentID = sessionStorage.getItem('studentID');
-          var studentName = sessionStorage.getItem('studentName');
-          var bookItems = JSON.parse(localStorage.getItem("bookItems")) || [];
-          if (studentID) {
-              document.getElementById('studentID').innerText = 'Student Name: ' + studentName;
-              console.log('Customer ID ' + studentID);
-              console.log('Customer Name ' + studentName);
-              console.log(cartItems);
-          } else {
-              console.log('Customer ID not found in sessionStorage');
-          }
-  
-          displayCartCount();
-      });
+    document.addEventListener("DOMContentLoaded", function () {
+        var studentID = sessionStorage.getItem('idNumber');
+        var studentName = sessionStorage.getItem('studentName');
+        var bookItems = JSON.parse(localStorage.getItem("bookItems")) || [];
+        if (studentID) {
+            document.getElementById('studentID').innerText = 'Student Name: ' + studentName;
+            console.log('Customer ID ' + studentID);
+            console.log('Customer Name ' + studentName);
+            console.log(cartItems);
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Access Denied',
+                text: 'You are not logged in. Redirecting to login page...',
+                timer: 3000,
+                showConfirmButton: false
+            }).then(() => {
+                window.location.href = 'index.php'; // Redirect to login page
+            });
+        }
+
+        displayCartCount();
+    });
   
      // ADD ITEM
     $(document).on('click', '#addItemButton', function () {
@@ -68,64 +76,109 @@
     });
     // END ADD ITEM
 
-  
-      // LOAD BOOKS
-      function loadBooks() {
-          $.ajax({
-              url: 'backend/adminFetchBooks.php',
-              success: function (data) {
-                  if (data.trim() === '') {
-                      $('#bookContent').append('<div><p>NO PRODUCTS AVAILABLE</p></div>');
-                  } else {
-                      $('#bookContent').append(data);
-                  }
-              },
-              error: function () {
-                  $('#bookContent').append('<div><p>Error loading products. Please try again later.</p></div>');
-              }
-          });
-      }
-  
-      loadBooks();
+
+    // LOAD BOOKS
+    function loadBooks() {
+        $.ajax({
+            url: 'backend/adminFetchBooks.php',
+            success: function (data) {
+                if (data.trim() === '') {
+                    $('#bookContent').append('<div><p>NO PRODUCTS AVAILABLE</p></div>');
+                } else {
+                    $('#bookContent').append(data);
+                }
+            },
+            error: function () {
+                $('#bookContent').append('<div><p>Error loading products. Please try again later.</p></div>');
+            }
+        });
+    }
+
+    loadBooks();
 
 
-  // EDIT ITEM
-        document.addEventListener('DOMContentLoaded', () => {
-            document.querySelectorAll('.edit-item').forEach(button => {
-                button.addEventListener('click', () => {
-                    const itemID = button.getAttribute('data-item-id');
-                    const itemName = button.getAttribute('data-item-name');
-                    const itemDescription = button.getAttribute('data-item-description');
-                    const itemStatus = button.getAttribute('data-item-status');
+    // EDIT ITEM
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('.edit-item').forEach(button => {
+            button.addEventListener('click', () => {
+                const itemID = button.getAttribute('data-item-id');
+                const itemName = button.getAttribute('data-item-name');
+                const itemDescription = button.getAttribute('data-item-description');
+                const itemStatus = button.getAttribute('data-item-status');
 
-                    document.getElementById('editItemID' + itemID).value = itemID;
-                    document.getElementById('editItemName' + itemID).value = itemName;
-                    document.getElementById('editItemDescription' + itemID).value = itemDescription;
-                    document.getElementById('editItemStatus' + itemID).value = itemStatus;
-                });
+                document.getElementById('editItemID' + itemID).value = itemID;
+                document.getElementById('editItemName' + itemID).value = itemName;
+                document.getElementById('editItemDescription' + itemID).value = itemDescription;
+                document.getElementById('editItemStatus' + itemID).value = itemStatus;
             });
+        });
 
-            $(document).on('submit', '.edit-item-form', function (e) {
-                e.preventDefault();
+        $(document).on('submit', '.edit-item-form', function (e) {
+            e.preventDefault();
 
-                var formData = new FormData(this);
-                var itemID = formData.get('editItemID');
+            var formData = new FormData(this);
+            var itemID = formData.get('editItemID');
 
+            $.ajax({
+                type: 'POST',
+                url: 'backend/updateItem.php',
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    console.log(response);
+                    if (response.success) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success',
+                            text: response.message,
+                        });
+                        setTimeout(() => location.reload(), 2000);
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: response.message,
+                        });
+                    }
+                },
+                error: function (xhr) {
+                    console.error("Error:", xhr.responseText);
+                }
+            });
+        });
+    });
+
+    // END EDIT ITEM
+
+  
+     // DELETE ITEM
+    $(document).on('click', '.delete-item', function () {
+        var itemID = $(this).data('item-id');
+
+        // Confirm before deletion
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this action!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
                 $.ajax({
                     type: 'POST',
-                    url: 'backend/updateItem.php',
-                    data: formData,
-                    contentType: false,
-                    processData: false,
+                    url: 'backend/deleteItem.php',
+                    data: { itemID: itemID },
                     success: function (response) {
-                        console.log(response);
                         if (response.success) {
                             Swal.fire({
                                 icon: 'success',
-                                title: 'Success',
+                                title: 'Deleted!',
                                 text: response.message,
                             });
-                            setTimeout(() => location.reload(), 2000);
+                            setTimeout(() => location.reload(), 2000); 
                         } else {
                             Swal.fire({
                                 icon: 'error',
@@ -134,62 +187,17 @@
                             });
                         }
                     },
-                    error: function (xhr) {
-                        console.error("Error:", xhr.responseText);
+                    error: function (xhr, status, error) {
+                        console.error("AJAX request error:", xhr.responseText);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'An error occurred while processing your request.',
+                        });
                     }
                 });
-            });
+            }
         });
+    });
 
-      // END EDIT ITEM
-
-  
-     // DELETE ITEM
-        $(document).on('click', '.delete-item', function () {
-            var itemID = $(this).data('item-id');
-
-            // Confirm before deletion
-            Swal.fire({
-                title: 'Are you sure?',
-                text: "You won't be able to revert this action!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#d33',
-                cancelButtonColor: '#3085d6',
-                confirmButtonText: 'Yes, delete it!'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    $.ajax({
-                        type: 'POST',
-                        url: 'backend/deleteItem.php',
-                        data: { itemID: itemID },
-                        success: function (response) {
-                            if (response.success) {
-                                Swal.fire({
-                                    icon: 'success',
-                                    title: 'Deleted!',
-                                    text: response.message,
-                                });
-                                setTimeout(() => location.reload(), 2000); 
-                            } else {
-                                Swal.fire({
-                                    icon: 'error',
-                                    title: 'Error',
-                                    text: response.message,
-                                });
-                            }
-                        },
-                        error: function (xhr, status, error) {
-                            console.error("AJAX request error:", xhr.responseText);
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Error',
-                                text: 'An error occurred while processing your request.',
-                            });
-                        }
-                    });
-                }
-            });
-        });
-
-        // END DELETE ITEM
+    // END DELETE ITEM

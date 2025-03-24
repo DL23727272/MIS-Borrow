@@ -107,7 +107,6 @@
       <!--End ti Navbar -->
 
 
-
       <!-- Signup Modal -->
     <div class="modal fade mt-5" id="signupModal" tabindex="-1" aria-labelledby="signupModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -127,12 +126,12 @@
                                     <input type="text" name="idNumber" id="idNumber" placeholder="Enter ID Number" class="form-control" required>
                                 </div>
                                 <div class="form-group my-3">
-                                    <label for="username" style="font-weight: 700;"><i class="fa-solid fa-user"></i> Username</label>
-                                    <input type="text" name="username" id="username" placeholder="Enter Username" class="form-control" required>
+                                    <label for="username" style="font-weight: 700;"><i class="fa-solid fa-user"></i> Fullname</label>
+                                    <input type="text" name="username" id="username" placeholder="Enter Fullname" class="form-control" required>
                                 </div>
                                 <div class="form-group my-3">
-                                    <label for="fullName" style="font-weight: 700;"><i class="fa-solid fa-signature"></i> Full Name</label>
-                                    <input type="text" name="fullName" id="fullName" placeholder="Enter Full Name" class="form-control" required>
+                                    <label for="fullName" style="font-weight: 700;"><i class="fa-solid fa-signature"></i> Userame</label>
+                                    <input type="text" name="fullName" id="fullName" placeholder="Enter Userame" class="form-control" required>
                                 </div>
                             </div>
                             <!-- Right Column -->

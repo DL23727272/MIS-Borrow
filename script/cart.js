@@ -1,5 +1,18 @@
 $(document).ready(function () {
     $('#modalContainer').load('modal.html');
+    const idNumber = sessionStorage.getItem('idNumber');
+
+    if (!idNumber) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Access Denied',
+            text: 'You are not logged in. Redirecting to login page...',
+            timer: 3000,
+            showConfirmButton: false
+        }).then(() => {
+            window.location.href = 'index.php'; // Redirect to login page
+        });
+    }
 
     // Function to update cart count in navbar
     function displayCartCount() {
@@ -11,7 +24,7 @@ $(document).ready(function () {
     // Function to get student info from session storage
     function getStudentInfo() {
         return {
-            userID: sessionStorage.getItem('userID'),
+            userID: sessionStorage.getItem('idNumber'),
             studentName: sessionStorage.getItem('studentName')
         };
     }

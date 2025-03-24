@@ -15,7 +15,7 @@ function Login() {
             url: "backend/loginProcess.php",
             data: {
                 userName: username,
-                userLoginPassword: password // Fix this key name
+                userLoginPassword: password 
             },
             dataType: "json",
             success: function(response) {
@@ -27,7 +27,7 @@ function Login() {
                         timer: 2000 
                     });
 
-                    sessionStorage.setItem('userID', response.userID);
+                    sessionStorage.setItem('idNumber', response.userID);
                     sessionStorage.setItem('studentName', username);
 
                     setTimeout(function() {

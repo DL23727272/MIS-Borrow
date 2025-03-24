@@ -117,7 +117,7 @@
               </button>
             </div>
           </div>
-          <div class="collapse navbar-collapse container-fluid" id="navbarSupportedContent" style="width: 30vw">
+          <div class="collapse navbar-collapse container-fluid" id="navbarSupportedContent" style="width: 50vw">
             <ul class="navbar-nav mb-2 mb-lg-0">
               <li class="nav-item">
                 <a class="nav-link fw-bold" aria-current="page" href="#">
@@ -130,7 +130,12 @@
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link " href="index.html">
+                <a class="nav-link fw-bold " href="borrowed.php">
+                  Borrowed Item's
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link " href="index.php">
                   <i class="fa-solid fa-power-off"></i>
                 </a>
               </li>
@@ -198,7 +203,7 @@
         });
     
         document.addEventListener("DOMContentLoaded", function () {
-            var userID = sessionStorage.getItem('userID');
+            var userID = sessionStorage.getItem('idNumber');
             var studentName = sessionStorage.getItem('studentName');
             var cartItem = JSON.parse(localStorage.getItem("itemCart")) || [];
             // Check if customerID is present
@@ -209,7 +214,16 @@
                 console.log(cartItem)
     
             } else {
-                console.log('Customer ID not found in sessionStorage');
+                console.log('User ID not found in sessionStorage.');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Access Denied',
+                    text: 'You are not logged in. Redirecting to login page...',
+                    timer: 3000,
+                    showConfirmButton: false
+                }).then(() => {
+                    window.location.href = 'index.php'; // Redirect to login page
+                });
             }
     
             // Update cart count in navbar
