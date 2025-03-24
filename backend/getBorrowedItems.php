@@ -12,7 +12,7 @@ $idNumber = $_GET['idNumber'];
 // Query to fetch borrowed items using idNumber
 $query = "
     SELECT b.itemID, i.itemName, b.borrowDate, b.returnDate
-    FROM BORROWED_ITEMS b
+    FROM borrowed_items b
     JOIN items i ON b.itemID = i.itemID
     JOIN users u ON b.userID = u.userID
     WHERE u.idNumber = ?

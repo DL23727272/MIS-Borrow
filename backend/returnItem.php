@@ -31,7 +31,7 @@ $userID = $userRow['userID'];
 $stmtUser->close();
 
 // Check if the item is already returned
-$queryCheck = "SELECT returnDate FROM BORROWED_ITEMS WHERE itemID = ? AND userID = ? AND returnDate IS NULL";
+$queryCheck = "SELECT returnDate FROM borrowed_items WHERE itemID = ? AND userID = ? AND returnDate IS NULL";
 $stmtCheck = $con->prepare($queryCheck);
 $stmtCheck->bind_param("ii", $itemID, $userID);
 $stmtCheck->execute();
@@ -44,7 +44,7 @@ if ($resultCheck->num_rows === 0) {
 $stmtCheck->close();
 
 // Mark the item as returned and update the status to 'Available'
-$queryReturn = "UPDATE BORROWED_ITEMS SET returnDate = NOW() WHERE itemID = ? AND userID = ?";
+$queryReturn = "UPDATE borrowed_items SET returnDate = NOW() WHERE itemID = ? AND userID = ?";
 $stmtReturn = $con->prepare($queryReturn);
 $stmtReturn->bind_param("ii", $itemID, $userID);
 
