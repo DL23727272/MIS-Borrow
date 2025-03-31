@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin</title>
+    <title>Borrowed</title>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
@@ -23,14 +23,28 @@
     <script src="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="icon" type="image/x-icon" href="img/logo.ico">
-    <link href="styles.css" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css">
     <link
       href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&display=swap"
       rel="stylesheet"
     />
 
     <style>
-        
+          .navbar {
+            background-color: #008000; 
+            transition: background-color 0.3s ease; 
+          }
+         
+          .nav-link {
+            color: white;
+            font-weight: 500;
+            transition: color 0.3s ease 
+          }
+          .nav-link.scrolled:hover {
+            color: #006341; 
+            font-weight: 500;
+          }
+         
           .login__bg{
             position: absolute;
             width: 100%;
@@ -50,8 +64,8 @@
     </style>
 </head>
 <body>
-      <!--Navbar-->
-      <header class="header">
+    <!--Navbar-->
+    <header class="header">
       <div class="container">
        <div
         class="d-flex flex-column align-items-center justify-content-center text-center"
@@ -84,7 +98,7 @@
         </div>
       </div>
     </header>
-    <nav class="navbar navbar-expand-lg shadow-lg sticky-top" id="navbar" style=" background-color:#800000">
+     <nav class="navbar navbar-expand-lg shadow-lg sticky-top" id="navbar" style=" background-color:#800000">
         <div class="container-sm d-flex justify-content-between" style="width: 100%;">
   
           <div class="d-flex justify-content-between align-items-center" style="width: 100vw">
@@ -93,7 +107,7 @@
               <!-- <div>
                   <img src="img/logo.png" alt="" style="width: 60px;" />
               </div> -->
-              <div class="ms-2">
+              <div class="ms-1">
                   <h3 class="fw-bold m-0 text-white">MIS Office Equipment Logs</h3>
               </div>
             </div>
@@ -106,13 +120,13 @@
           <div class="collapse navbar-collapse container-fluid" id="navbarSupportedContent" style="width: 50vw">
             <ul class="navbar-nav mb-2 mb-lg-0">
               <li class="nav-item">
-                <a class="nav-link fw-bold" aria-current="page" href="#">
+                <a class="nav-link fw-bold" aria-current="page" href="admin.php">
                   Home
                 </a>
               </li>
               <li class="nav-item">
                 <a class="nav-link fw-bold " href="borrowed_items.php">
-                 Borrowed Item's 
+                  Borrowed Item's
                 </a>
               </li>
               <li class="nav-item">
@@ -125,7 +139,8 @@
       
         </div>
       </nav>
-      <!--End ti Navbar -->
+    <!--End ti Navbar -->
+
 
 
       <!-- MODAL -->
@@ -144,13 +159,8 @@
             class="mt-5 mb-3 img-fluid"
             srcset=""
           />
-          <p class="w-75 lead text-secondary fst-italic">
-            Starbucks is more than just a coffee shop; it's a community hub where
-            people connect over delicious drinks and meaningful moments. With our
-            expertly crafted coffees, teas, and snacks, every visit is an
-            opportunity to treat yourself to quality and comfort. From our iconic
-            lattes to seasonal favorites, there's something for every palate. Join
-            us at Starbucks and let's make every sip count.
+          <p class="w-75 lead text-secondary fst-italic" id="studentID">
+            
           </p>
          
         </div>
@@ -159,49 +169,40 @@
   
       <hr class="container-sm Sborder border-success mt-5 border-2 opacity-50" />
   
-      <section class="mt-5">
-        <div class="container-sm">
-          <div class="row justify-content-center">
-            <div class="col-12 text-center">
-                <div class="mt-5">
-                    <a class="nav-link" data-bs-toggle="modal" data-bs-target="#addItemModal"> 
-                        <button class="btn btn-outline-success" >Add Item</button>
-                    </a>
-                 </div>
-              <h1 class="fw-bold">Library Books</h1>
-            </div>
-          </div>
-          <div class=" w-100" id="bookContent">
-            
-          </div>
+      <!--Borrowed Items-->
+    <section class="container-sm mt-5">
+        <h2>Borrowed Items (Admin View)</h2>
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Item Name</th>
+                        <th>Borrower</th>
+                        <th>Borrow Date</th>
+                        <th>Returned Date</th>
+                        <th>Return</th>
+                    </tr>
+                </thead>
+                <tbody id="borrowedTableBody">
+                    <!-- Borrowed items will be displayed here -->
+                </tbody>
+            </table>
         </div>
-      </section>
-      
-    
+    </section>
+
+
+      <!---end Cart-->
+      <hr class="container-sm Sborder border-success mt-5 border-2 opacity-50" />
       <!---Footer-->
       <?php include 'footer.php'?>
      <!---End Footer-->
 
-
-    <script src="script/admin.js"></script>
-    <script type="text/javascript">
+ 
+     <script src="script/admin_borrowedItems.js"></script>
+     <script src="script/cart.js"></script>
+     <script type="text/javascript">
       alertify.set('notifier', 'position', 'top-right');
-  
-      $(document).ready(function () {
-          $('#modalContainer').load('modal.html');
-      });
-      document.addEventListener("DOMContentLoaded", function () {
-        document.querySelectorAll(".ispsc-logo").forEach(function (element) {
-            element.innerHTML = element.textContent
-              .split(" ")
-              .map(word => `<span>${word.charAt(0)}</span>${word.slice(1)}`)
-              .join(" ");
-          });
-      });
-  
-     
-  </script>
-  
-    
+
+    </script>
 </body>
 </html>

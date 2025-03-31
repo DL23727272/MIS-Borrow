@@ -12,7 +12,7 @@ echo '<div class="row justify-content-center m-2">';
 while ($row = mysqli_fetch_assoc($result)) {
     echo '<div class="card mt-4 m-3 p-3 col-12 col-md-6 col-lg-3">';
     echo '<div class="d-flex justify-content-center">';
-    echo '<img src="img/'. $row['itemImage'] .'" alt="Item Image" style="max-width: 100%; height: 200px; object-fit: cover; "/>';
+    echo '<img src="./uploads/'. $row['itemImage'] .'" alt="Item Image" style="max-width: 100%; height: 200px; object-fit: cover; "/>';
     echo '</div>';
     echo '<hr class="border-success border-2"/>';
     echo '<div>';
