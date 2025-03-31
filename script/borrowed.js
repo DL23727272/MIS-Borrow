@@ -20,12 +20,19 @@ function fetchBorrowedItems(idNumber) {
             tableBody.empty();
 
             if (response.success) {
+                // Sort to move 'Not Returned' items to the top
+                response.borrowedItems.sort((a, b) => {
+                    const returnA = a.returnDate ? 1 : 0;
+                    const returnB = b.returnDate ? 1 : 0;
+                    return returnA - returnB; // Not Returned comes first
+                });
+
                 response.borrowedItems.forEach(item => {
                     const returnDate = item.returnDate || "Not Returned";
                     const returnButton = returnDate === "Not Returned"
                         ? `<button class="btn btn-warning btn-sm return-btn" data-itemid="${item.itemID}">Return</button>`
                         : 'Returned';
-                        
+
                     tableBody.append(`
                         <tr>
                             <td>${item.itemName}</td>
@@ -45,6 +52,7 @@ function fetchBorrowedItems(idNumber) {
         }
     });
 }
+
 
 
 $(document).on('click', '.return-btn', function() {

@@ -19,6 +19,13 @@ function fetchBorrowedItemsForAdmin() {
             tableBody.empty();
 
             if (response.success) {
+                // Sort to move 'Not Returned' items to the top
+                response.borrowedItems.sort((a, b) => {
+                    const returnA = a.returnDate ? 1 : 0;
+                    const returnB = b.returnDate ? 1 : 0;
+                    return returnA - returnB; // Not Returned comes first
+                });
+
                 response.borrowedItems.forEach(item => {
                     const returnDate = item.returnDate || "Not Returned";
                     const returnButton = returnDate === "Not Returned"

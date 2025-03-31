@@ -9,6 +9,9 @@ body {
 #menu {
   filter: invert(1);
 }
+#mugIcon {
+  color: white; /* Makes the icon white */
+}
 
 /* * {
   border: 1px solid red;
