@@ -158,15 +158,10 @@
       <!-- END MODAL -->
 
       <!--Hero-->
-     <section class="container-sm">
-        <div class="d-flex flex-column align-items-center text-center">
-          <p class="w-75 lead text-secondary fst-italic" id="studentID">
-          
-          </p>
-          <!-- <a class="nav-link" data-bs-toggle="modal" data-bs-target="#addProduct"> 
-          <button class="btn btn-outline-success" >Add Product</button>
-          </a> -->
-        </div>
+      <section class="container-sm mt-4">
+          <div class="d-flex flex-column align-items-center text-center">
+              <h1 class="display-6 text-danger fw-bold" id="welcomeBanner"></h1>
+          </div>
       </section>
       <!-- End Hero-->
   
@@ -191,6 +186,12 @@
 
  
     <script type="text/javascript">
+
+document.addEventListener("DOMContentLoaded", function () {
+    let userName = sessionStorage.getItem('studentName');
+    document.getElementById('welcomeBanner').innerText = `Welcome, ${userName}!`;
+});
+
         alertify.set('notifier', 'position', 'top-right');
     
         $(document).ready(function () {

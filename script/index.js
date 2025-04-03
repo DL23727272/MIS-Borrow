@@ -61,7 +61,7 @@ function Signup() {
     var studentSignUpName = $("#username").val();
     var studentSignUpUsername = $("#fullName").val();
     var studentDepartment = $("#department").val();
-    var studentSignUpPassword = $("#password").val();
+    var studentSignUpPassword = $("#passwordSignUp").val();
     var checkSignUpPassword = $("#confirmPassword").val();
 
     // Check if passwords match
@@ -110,7 +110,7 @@ function Signup() {
                         showConfirmButton: false,
                         timer: 2000 
                     });
-                    $('#exampleModal').modal('hide');
+                    $('#signupModal').modal('hide');
                 } else {
                     alertify.error(response.message);
                 }

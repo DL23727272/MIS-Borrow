@@ -144,9 +144,9 @@
                                     <i class="fa-solid fa-lock"></i> Password
                                 </label>
                                 <div class="input-group my-3">
-                                    <input type="password" name="password" id="password" placeholder="Enter Password" class="form-control" required>
+                                    <input type="password" name="password" id="passwordSignUp" placeholder="Enter Password" class="form-control" required>
                                     <button class="btn btn-outline-dark" type="button" id="toggleSignupPassword">
-                                        <i class="fa fa-eye-slash" id="eyeIcon" aria-hidden="true"></i>
+                                        <i class="fa fa-eye-slash" id="eyeIconSignUp" aria-hidden="true"></i>
                                     </button>
                                 </div>
                                 </div>
@@ -241,6 +241,27 @@
           const togglePassword = document.getElementById('togglePassword');
           const passwordInput = document.getElementById('userPassword');
           const eyeIcon = document.getElementById('eyeIcon');
+        
+          togglePassword.addEventListener('click', function () {
+            // Toggle the type attribute
+            const type = passwordInput.type === 'password' ? 'text' : 'password';
+            passwordInput.type = type;
+        
+            // Toggle the eye icon
+            if (type === 'password') {
+              eyeIcon.classList.remove('fa-eye');
+              eyeIcon.classList.add('fa-eye-slash');
+            } else {
+              eyeIcon.classList.remove('fa-eye-slash');
+              eyeIcon.classList.add('fa-eye');
+            }
+          });
+      });
+
+      document.addEventListener('DOMContentLoaded', function () {
+          const togglePassword = document.getElementById('toggleSignupPassword');
+          const passwordInput = document.getElementById('passwordSignUp');
+          const eyeIcon = document.getElementById('eyeIconSignUp');
         
           togglePassword.addEventListener('click', function () {
             // Toggle the type attribute
